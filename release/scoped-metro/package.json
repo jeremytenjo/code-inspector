@@ -1,6 +1,6 @@
 {
   "name": "@jeremytenjo/code-inspector-metro",
-  "version": "2.0.9-metro.0",
+  "version": "2.0.9-metro.1",
   "type": "module",
   "main": "./dist/index.mjs",
   "types": "./types/index.d.ts",
@@ -17,7 +17,7 @@
   },
   "scripts": {},
   "dependencies": {
-    "@jeremytenjo/code-inspector-core": "2.0.9-metro.0"
+    "@jeremytenjo/code-inspector-core": "2.0.9-metro.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
