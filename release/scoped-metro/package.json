@@ -1,0 +1,27 @@
+{
+  "name": "@jeremytenjo/code-inspector-metro",
+  "version": "2.0.9-metro.0",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./transformer": "./dist/transformer.cjs"
+  },
+  "scripts": {},
+  "dependencies": {
+    "@jeremytenjo/code-inspector-core": "2.0.9-metro.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.3.9"
+  }
+}
