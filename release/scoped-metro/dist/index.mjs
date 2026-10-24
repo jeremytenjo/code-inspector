@@ -1,71 +1,79 @@
-import { fileURLToPath as u } from "node:url";
-import { join as w } from "node:path";
-import { startServer as f } from "@jeremytenjo/code-inspector-core";
-function p(e) {
-  const r = new URL(e || "/", "http://localhost");
-  return r.pathname.endsWith(".bundle") && r.searchParams.get("platform") === "web" && r.searchParams.get("dev") === "true";
+import { existsSync as f } from "node:fs";
+import { fileURLToPath as p } from "node:url";
+import { delimiter as v, join as l } from "node:path";
+import { startServer as w } from "@jeremytenjo/code-inspector-core";
+function R(r) {
+  const e = new URL(r || "/", "http://localhost");
+  return e.pathname.endsWith(".bundle") && e.searchParams.get("platform") === "web" && e.searchParams.get("dev") === "true";
 }
-function T(e, r) {
-  if (!r.projectRoot || !r.injectTo)
+function T(r) {
+  if (!r || process.env.CODE_EDITOR || r.includes("/") || r.includes("\\"))
+    return;
+  const e = process.env.PATH?.split(v).map((t) => l(t, r)).find(f);
+  e && (process.env.CODE_EDITOR = e);
+}
+function b(r, e) {
+  if (!e.projectRoot || !e.injectTo)
     throw new Error("Code Inspector Metro requires projectRoot and injectTo.");
-  const h = e.transformer?.babelTransformerPath;
-  if (!h)
+  T(e.editor);
+  const t = r.transformer?.babelTransformerPath;
+  if (!t)
     throw new Error("Code Inspector Metro requires an existing Babel transformer.");
   process.env.CODE_INSPECTOR_METRO_CONFIG = JSON.stringify({
-    projectRoot: r.projectRoot,
-    injectTo: r.injectTo,
-    showSwitch: r.showSwitch ?? !1,
-    hotKeys: r.hotKeys,
-    editor: r.editor,
-    originalTransformerPath: h
+    projectRoot: e.projectRoot,
+    injectTo: e.injectTo,
+    showSwitch: e.showSwitch ?? !1,
+    hotKeys: e.hotKeys,
+    editor: e.editor,
+    originalTransformerPath: t
   });
-  const l = e.server?.enhanceMiddleware;
-  let t;
-  const m = () => {
-    if (!t) {
-      const o = {
-        output: w(r.projectRoot, "node_modules/.cache/code-inspector-metro"),
-        root: r.projectRoot,
-        envDir: r.projectRoot,
+  const m = r.server?.enhanceMiddleware;
+  let o;
+  const d = () => {
+    if (!o) {
+      const n = {
+        output: l(e.projectRoot, "node_modules/.cache/code-inspector-metro"),
+        root: e.projectRoot,
+        envDir: e.projectRoot,
         entry: "",
         port: 0
-      }, a = {
+      }, c = {
         bundler: "metro",
-        showSwitch: r.showSwitch ?? !1,
-        hotKeys: r.hotKeys,
-        editor: r.editor,
+        showSwitch: e.showSwitch ?? !1,
+        hotKeys: e.hotKeys,
+        editor: e.editor,
         pathType: "relative"
       };
-      t = f(a, o).catch((n) => {
-        throw t = void 0, n;
+      o = w(c, n).catch((s) => {
+        throw o = void 0, s;
       });
     }
-    return t;
-  }, d = import.meta.url;
+    return o;
+  }, u = import.meta.url;
   return {
-    ...e,
+    ...r,
     server: {
-      ...e.server,
-      enhanceMiddleware(o, a) {
-        const n = l?.call(e.server, o, a) || o;
-        return (c, i, s) => {
-          if (!p(c.url)) {
-            n(c, i, s);
+      ...r.server,
+      enhanceMiddleware(n, c) {
+        const s = m?.call(r.server, n, c) || n;
+        return (a, h, i) => {
+          if (!R(a.url)) {
+            s(a, h, i);
             return;
           }
-          m().then(
-            () => n(c, i, s),
-            s
+          d().then(
+            () => s(a, h, i),
+            i
           );
         };
       }
     },
     transformer: {
-      ...e.transformer,
-      babelTransformerPath: u(new URL("./transformer.cjs", d))
+      ...r.transformer,
+      babelTransformerPath: p(new URL("./transformer.cjs", u))
     }
   };
 }
 export {
-  T as withCodeInspectorMetro
+  b as withCodeInspectorMetro
 };
