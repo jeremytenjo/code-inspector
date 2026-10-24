@@ -1,8 +1,9 @@
-import { type CodeOptions } from '@code-inspector/core';
+import { type CodeOptions } from '@jeremytenjo/code-inspector-core';
 export type MetroInspectorOptions = {
     projectRoot: string;
     injectTo: string;
     showSwitch?: boolean;
+    hotKeys?: CodeOptions['hotKeys'];
     editor?: CodeOptions['editor'];
 };
 export type MetroConfigLike = {

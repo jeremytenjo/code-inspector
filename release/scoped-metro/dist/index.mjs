@@ -1,7 +1,7 @@
 import { fileURLToPath as u } from "node:url";
-import { join as p } from "node:path";
-import { startServer as w } from "@code-inspector/core";
-function f(e) {
+import { join as w } from "node:path";
+import { startServer as f } from "@jeremytenjo/code-inspector-core";
+function p(e) {
   const r = new URL(e || "/", "http://localhost");
   return r.pathname.endsWith(".bundle") && r.searchParams.get("platform") === "web" && r.searchParams.get("dev") === "true";
 }
@@ -15,6 +15,7 @@ function T(e, r) {
     projectRoot: r.projectRoot,
     injectTo: r.injectTo,
     showSwitch: r.showSwitch ?? !1,
+    hotKeys: r.hotKeys,
     editor: r.editor,
     originalTransformerPath: h
   });
@@ -23,7 +24,7 @@ function T(e, r) {
   const m = () => {
     if (!t) {
       const o = {
-        output: p(r.projectRoot, "node_modules/.cache/code-inspector-metro"),
+        output: w(r.projectRoot, "node_modules/.cache/code-inspector-metro"),
         root: r.projectRoot,
         envDir: r.projectRoot,
         entry: "",
@@ -31,10 +32,11 @@ function T(e, r) {
       }, a = {
         bundler: "metro",
         showSwitch: r.showSwitch ?? !1,
+        hotKeys: r.hotKeys,
         editor: r.editor,
         pathType: "relative"
       };
-      t = w(a, o).catch((n) => {
+      t = f(a, o).catch((n) => {
         throw t = void 0, n;
       });
     }
@@ -47,7 +49,7 @@ function T(e, r) {
       enhanceMiddleware(o, a) {
         const n = l?.call(e.server, o, a) || o;
         return (c, i, s) => {
-          if (!f(c.url)) {
+          if (!p(c.url)) {
             n(c, i, s);
             return;
           }
