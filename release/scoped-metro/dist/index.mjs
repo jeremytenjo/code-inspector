@@ -9,6 +9,7 @@ function s(e, r) {
     projectRoot: r.projectRoot,
     injectTo: r.injectTo,
     showSwitch: r.showSwitch ?? !1,
+    editor: r.editor,
     originalTransformerPath: o
   });
   const t = import.meta.url;
